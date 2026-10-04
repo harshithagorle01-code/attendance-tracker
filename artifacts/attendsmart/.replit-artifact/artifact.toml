@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "AttendSmart"
+description = "A student attendance tracker for managing subjects, timetables, attendance records, leave, analytics, and planning advice with reliable calculations and offline support."
+version = "1.0.0"
+id = "artifacts/attendsmart"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22896
+
+[services.development]
+run = "pnpm --filter @workspace/attendsmart run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/attendsmart", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/attendsmart/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22896"
+BASE_PATH = "/"

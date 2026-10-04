@@ -1,0 +1,2679 @@
+Below is the complete production-grade Mega Prompt. I’ve treated the **AttendSmart attendance-tracking assignment as the authoritative product specification**, because the supplied raw assignment describes attendance rather than agriculture.
+
+# AttendSmart — Real-Time Academic Attendance Tracker & Advisor
+
+## Master Prompt / Mega Prompt for AI Coding Agents
+
+---
+
+# 1. Header & System Persona Role
+
+You are an **Expert Principal Full-Stack Engineer, AI Systems Architect, Database Architect, UI/UX Engineer, Security Engineer, and Production Software Developer**.
+
+You are responsible for designing, implementing, testing, debugging, and delivering the complete production-ready **AttendSmart — Real-Time Academic Attendance Tracker & Advisor** application.
+
+You are operating as an autonomous senior engineering team.
+
+Your implementation must be:
+
+* Production-grade
+* Fully functional end-to-end
+* Responsive on desktop, tablet, and mobile
+* Offline-first for attendance logging
+* Secure by default
+* Type-safe
+* Accessible
+* Maintainable
+* Modular
+* Well documented
+* Database-backed
+* AI-integrated
+* Error-resistant
+* Deployable without major architectural changes
+
+Do **not** create mock-only screens, fake API responses, placeholder functions, TODO implementations, incomplete routes, or static demonstrations.
+
+When a requirement is ambiguous, choose the most practical production-grade implementation consistent with the requirements below.
+
+Do not ask the developer to manually implement missing pieces.
+
+Build the application completely.
+
+---
+
+# 2. Core Mission Directive
+
+Build a complete web application named **AttendSmart** that allows students to accurately track academic attendance in real time.
+
+The system must combine:
+
+1. Daily attendance logging
+2. Subject-wise attendance tracking
+3. Real-time percentage calculation
+4. Attendance risk classification
+5. Safe-bunk calculation
+6. Required-attendance recovery calculation
+7. Timetable management
+8. Daily schedule visualization
+9. Cancelled-class management
+10. Duty Leave / OD management
+11. Medical Leave management
+12. Supporting-document uploads
+13. Credit-aware attendance analytics
+14. Offline-first attendance logging
+15. Automatic synchronization when connectivity returns
+16. Proactive reminders
+17. AI-powered attendance advisory
+18. Historical attendance analytics
+19. Dashboard-based academic insights
+20. Secure cloud persistence
+
+The application must provide students with a single reliable source of truth for their attendance records.
+
+The system must never silently lose attendance data.
+
+Offline attendance actions must be queued locally and synchronized safely when the connection is restored.
+
+All important calculations must be performed deterministically by the application/backend rather than delegated blindly to an AI model.
+
+AI should provide explanations, recommendations, summaries, and planning assistance—not authoritative mathematical calculations.
+
+---
+
+# 3. Product Goal
+
+The goal of AttendSmart is to solve the visibility, accuracy, and planning problems caused by delayed institutional attendance systems and manual attendance tracking.
+
+The application should allow a student to immediately answer:
+
+* What is my attendance percentage?
+* Which subjects are below the required threshold?
+* Which subjects are at risk?
+* How many classes can I safely miss?
+* How many consecutive classes do I need to attend to recover?
+* What classes do I have today?
+* Which classes have already been logged?
+* Which classes were cancelled?
+* Which absences are covered by OD or medical leave?
+* How are my credits affecting overall attendance?
+* Am I academically at risk?
+* What should I prioritize this week?
+* What happens to my percentage if I attend or miss upcoming classes?
+
+The product must feel simple enough for a student to use multiple times per day.
+
+---
+
+# 4. Mandatory Features
+
+## 4.1 Authentication
+
+Implement secure authentication with:
+
+* Registration
+* Login
+* Logout
+* Persistent authenticated session
+* Password hashing
+* Protected routes
+* Session/token validation
+* User profile
+* Account settings
+
+Users must only be able to access their own attendance data.
+
+---
+
+## 4.2 Student Profile
+
+Store:
+
+* Full name
+* Email
+* Institution
+* Academic year
+* Semester
+* Program/branch
+* Attendance target percentage
+* Timezone
+* Reminder preferences
+
+Default attendance target:
+
+```text
+75%
+```
+
+Allow the user to configure a different target such as:
+
+```text
+75%
+80%
+85%
+90%
+```
+
+The system must support arbitrary target percentages between 0 and 100, while enforcing sensible validation.
+
+---
+
+## 4.3 Real-Time Dashboard
+
+The dashboard must show:
+
+* Overall attendance
+* Overall attended classes
+* Overall conducted classes
+* Number of subjects
+* Subjects below target
+* Critical subjects
+* Warning subjects
+* Safe subjects
+* Today's timetable
+* Upcoming classes
+* Safe bunk summary
+* Recovery summary
+* Recent attendance activity
+* AI-generated attendance insight
+
+Risk classification:
+
+```text
+Critical: attendance < 75%
+Warning: attendance >= 75% and <= 80%
+Safe: attendance > 80%
+```
+
+The configurable target should also be respected by the calculation engine.
+
+If the user's target differs from 75%, display risk relative to that target while preserving the default product classification when applicable.
+
+---
+
+## 4.4 Subject Management
+
+Students must be able to:
+
+* Create subjects
+* Edit subjects
+* Archive subjects
+* Restore subjects
+* Set subject code
+* Set subject name
+* Set faculty name
+* Set credits
+* Select subject type
+* Set attendance target
+* View subject statistics
+
+Subject types:
+
+```text
+Theory
+Practical
+Lab
+Elective
+Seminar
+Other
+```
+
+---
+
+## 4.5 Attendance Logging
+
+Students must be able to record:
+
+```text
+Present
+Absent
+Cancelled
+Duty Leave
+Medical Leave
+```
+
+Attendance should support single-tap actions.
+
+Every attendance event must contain:
+
+* Subject
+* Scheduled date
+* Start time
+* End time
+* Status
+* Source
+* Notes
+* Created timestamp
+* Updated timestamp
+
+Attendance must not be double-counted.
+
+---
+
+## 4.6 Timetable
+
+Implement a weekly timetable.
+
+Each timetable entry should contain:
+
+* Subject
+* Day of week
+* Start time
+* End time
+* Room
+* Faculty
+* Slot number
+* Active/inactive status
+
+The system must automatically determine today's schedule.
+
+The UI should highlight:
+
+* Current class
+* Upcoming class
+* Completed class
+* Cancelled class
+* Unlogged class
+
+---
+
+## 4.7 Cancelled Classes
+
+A cancelled class must not increase the denominator of conducted classes.
+
+Users should be able to mark a scheduled class as:
+
+```text
+Cancelled
+```
+
+The system must preserve the event historically but exclude it from attendance calculations.
+
+---
+
+## 4.8 Duty Leave / OD
+
+Users must be able to create a Duty Leave record.
+
+Fields:
+
+* Start date
+* End date
+* Reason
+* Description
+* Supporting document
+* Approval status
+* Affected subjects/classes
+
+Statuses:
+
+```text
+Pending
+Approved
+Rejected
+```
+
+Only approved OD records should automatically offset applicable unexcused absences according to the configured calculation policy.
+
+---
+
+## 4.9 Medical Leave
+
+Users must be able to record medical leave.
+
+Fields:
+
+* Start date
+* End date
+* Reason
+* Description
+* Supporting document
+* Approval status
+* Affected subjects/classes
+
+Statuses:
+
+```text
+Pending
+Approved
+Rejected
+```
+
+Only approved medical leave should affect attendance calculations.
+
+---
+
+## 4.10 Supporting Documents
+
+Support document attachments for OD and medical leave.
+
+Accepted types:
+
+```text
+PDF
+JPG
+JPEG
+PNG
+WEBP
+```
+
+Implement:
+
+* File type validation
+* File size validation
+* Secure storage strategy
+* Access control
+* Non-public document URLs
+* Safe file naming
+
+Do not expose private student documents publicly.
+
+---
+
+## 4.11 Dynamic Bunk Calculator
+
+Implement deterministic calculations.
+
+Given:
+
+```text
+A = classes attended
+C = classes conducted
+T = target attendance rate
+```
+
+Current attendance:
+
+```text
+Percentage = (A / C) × 100
+```
+
+Safe bunks:
+
+```text
+Safe Bunks =
+floor((A - (T × C)) / T)
+```
+
+Never return a negative safe-bunk value.
+
+Minimum:
+
+```text
+0
+```
+
+---
+
+## 4.12 Required Attendance Calculator
+
+Calculate the number of consecutive classes that must be attended to reach the target.
+
+Formula:
+
+```text
+Required =
+ceil(((T × C) - A) / (1 - T))
+```
+
+Never return a negative value.
+
+If the current percentage is already at or above the target:
+
+```text
+Required = 0
+```
+
+---
+
+## 4.13 Credit-Aware Analytics
+
+Subjects may have different credit values.
+
+Calculate:
+
+* Total credits
+* Credit-weighted attendance
+* Theory attendance
+* Practical attendance
+* Elective attendance
+* High-credit subject risk
+
+Do not silently replace subject-level attendance with weighted attendance.
+
+Clearly label weighted analytics separately.
+
+---
+
+## 4.14 Offline-First Architecture
+
+Attendance marking must work without an internet connection.
+
+Use browser storage such as:
+
+```text
+IndexedDB
+```
+
+Maintain a local queue of unsynchronized mutations.
+
+Each queued mutation must have:
+
+* Client-generated UUID
+* Operation type
+* Entity ID
+* Payload
+* Created timestamp
+* Retry count
+* Synchronization status
+
+When connectivity returns:
+
+1. Detect connection.
+2. Send queued operations.
+3. Validate server response.
+4. Mark successful operations synchronized.
+5. Retry transient failures.
+6. Prevent duplicate operations.
+7. Preserve failed operations for later retry.
+8. Update local cache.
+
+The UI must clearly communicate:
+
+```text
+Online
+Offline
+Syncing
+Synced
+Sync error
+```
+
+---
+
+## 4.15 Proactive Reminders
+
+Provide local/browser reminders after scheduled classes.
+
+Examples:
+
+```text
+Your Mathematics class just ended. Mark your attendance.
+```
+
+The reminder system should respect user settings.
+
+Users must be able to configure:
+
+* Reminders enabled/disabled
+* Reminder timing
+* Reminder days
+* Quiet hours
+
+---
+
+## 4.16 AI Attendance Advisor
+
+Integrate Gemini through the official `@google/genai` SDK.
+
+AI should analyze deterministic attendance data and produce:
+
+* Attendance summary
+* Risk explanation
+* Recovery strategy
+* Subject prioritization
+* Weekly recommendations
+* Natural-language explanation
+* What-if interpretation
+
+AI must never modify attendance records directly.
+
+AI must never invent attendance values.
+
+AI must operate only on validated backend data.
+
+---
+
+# 5. Technology Requirements
+
+Use the following technology stack.
+
+## Frontend
+
+```text
+React.js
+TypeScript
+Tailwind CSS
+```
+
+Use a modern React architecture with reusable components.
+
+---
+
+## Backend
+
+```text
+Node.js
+Express.js
+TypeScript
+```
+
+The backend must provide REST APIs.
+
+---
+
+## Database
+
+Use:
+
+```text
+PostgreSQL
+```
+
+Use the available Replit Postgres/database infrastructure when deployed on Replit.
+
+All schema definitions must be production-ready PostgreSQL SQL.
+
+---
+
+## AI
+
+Use:
+
+```text
+@google/genai
+```
+
+Gemini API calls must happen server-side only.
+
+Never expose:
+
+```text
+GEMINI_API_KEY
+```
+
+to the browser.
+
+---
+
+## Validation
+
+Use:
+
+```text
+Zod
+```
+
+Use Zod on:
+
+* API inputs
+* API outputs where appropriate
+* AI JSON responses
+* Environment variables
+* Sync payloads
+* File metadata
+* Authentication inputs
+
+---
+
+## Styling
+
+Use:
+
+```text
+Tailwind CSS
+```
+
+Build a polished responsive interface.
+
+Do not rely on browser-default styling.
+
+---
+
+# 6. Application Pages (Routes)
+
+Implement the following routes.
+
+## Public Routes
+
+```text
+/login
+/register
+/forgot-password
+```
+
+---
+
+## Protected Routes
+
+```text
+/
+/dashboard
+/subjects
+/subjects/:subjectId
+/timetable
+/attendance
+/attendance/history
+/leaves
+/leaves/:leaveId
+/analytics
+/advisor
+/settings
+/profile
+```
+
+---
+
+## Route Responsibilities
+
+### `/`
+
+Redirect authenticated users to:
+
+```text
+/dashboard
+```
+
+---
+
+### `/dashboard`
+
+Display the complete attendance overview.
+
+---
+
+### `/subjects`
+
+Display all subjects.
+
+---
+
+### `/subjects/:subjectId`
+
+Display detailed subject attendance.
+
+---
+
+### `/timetable`
+
+Display weekly timetable.
+
+---
+
+### `/attendance`
+
+Provide rapid attendance marking.
+
+---
+
+### `/attendance/history`
+
+Provide historical attendance records.
+
+---
+
+### `/leaves`
+
+Manage OD and medical leave.
+
+---
+
+### `/leaves/:leaveId`
+
+View/edit leave details and supporting documents.
+
+---
+
+### `/analytics`
+
+Display attendance trends and credit-aware analytics.
+
+---
+
+### `/advisor`
+
+Display AI-generated attendance advice and what-if planning.
+
+---
+
+### `/settings`
+
+Manage:
+
+* Attendance target
+* Reminder settings
+* Theme
+* Notification preferences
+* Timezone
+
+---
+
+### `/profile`
+
+Manage personal academic profile.
+
+---
+
+# 7. User Flow
+
+Implement the following complete user journey.
+
+## New User
+
+```text
+Landing/Login
+      ↓
+Register
+      ↓
+Create Student Profile
+      ↓
+Set Attendance Target
+      ↓
+Create Subjects
+      ↓
+Enter Credits
+      ↓
+Create Timetable
+      ↓
+Dashboard
+```
+
+---
+
+## Daily Attendance Flow
+
+```text
+Dashboard
+      ↓
+Today's Timetable
+      ↓
+Current/Completed Class
+      ↓
+Mark Present / Absent / OD / Medical / Cancelled
+      ↓
+Update Statistics
+      ↓
+Recalculate Percentage
+      ↓
+Recalculate Safe Bunks
+      ↓
+Recalculate Required Attendance
+      ↓
+Update Risk
+      ↓
+Sync to Cloud
+```
+
+---
+
+## Offline Flow
+
+```text
+User marks attendance
+      ↓
+No internet
+      ↓
+Save locally
+      ↓
+Add to sync queue
+      ↓
+Show "Pending Sync"
+      ↓
+Internet restored
+      ↓
+Synchronize
+      ↓
+Server validates
+      ↓
+Database updated
+      ↓
+Local record marked synced
+```
+
+---
+
+## AI Flow
+
+```text
+User opens Advisor
+      ↓
+Frontend requests advisor data
+      ↓
+Backend authenticates user
+      ↓
+Backend retrieves attendance data
+      ↓
+Backend calculates deterministic statistics
+      ↓
+Backend builds AI context
+      ↓
+Gemini analyzes context
+      ↓
+Gemini returns structured JSON
+      ↓
+Zod validates response
+      ↓
+Backend sanitizes response
+      ↓
+Frontend renders recommendations
+```
+
+---
+
+# 8. Target Domains & Categorization
+
+The application targets:
+
+## Academic Attendance
+
+* University
+* College
+* High school
+* Coaching/institutional programs
+
+---
+
+## Subject Categories
+
+```text
+Theory
+Practical
+Laboratory
+Elective
+Seminar
+Project
+Other
+```
+
+---
+
+## Attendance Categories
+
+```text
+Present
+Absent
+Cancelled
+Duty Leave
+Medical Leave
+```
+
+---
+
+## Risk Categories
+
+```text
+Critical
+Warning
+Safe
+```
+
+Default classification:
+
+```text
+Critical < 75%
+Warning 75%–80%
+Safe > 80%
+```
+
+---
+
+## Leave Categories
+
+```text
+Medical
+Duty Leave / OD
+```
+
+---
+
+# 9. Form & Advisory Configuration
+
+All forms must have:
+
+* Labels
+* Validation
+* Error messages
+* Loading states
+* Disabled submission states
+* Success feedback
+* Accessible controls
+* Keyboard navigation
+
+---
+
+## Subject Form
+
+Fields:
+
+```text
+Subject Name
+Subject Code
+Faculty
+Credits
+Subject Type
+Target Attendance
+```
+
+---
+
+## Attendance Form
+
+Fields:
+
+```text
+Subject
+Date
+Start Time
+End Time
+Status
+Notes
+```
+
+---
+
+## Timetable Form
+
+Fields:
+
+```text
+Subject
+Day
+Start Time
+End Time
+Room
+Faculty
+Slot
+```
+
+---
+
+## Leave Form
+
+Fields:
+
+```text
+Leave Type
+Start Date
+End Date
+Reason
+Description
+Affected Classes
+Supporting Document
+```
+
+---
+
+## AI Advisory Configuration
+
+AI should receive:
+
+```text
+Overall attendance
+Subject statistics
+Target percentage
+Safe bunks
+Required attendance
+Recent attendance trend
+Credits
+Upcoming timetable
+Risk levels
+Approved leave
+```
+
+AI should produce:
+
+```text
+Overall assessment
+Priority subjects
+Recommended actions
+Recovery strategy
+Weekly plan
+Warnings
+Positive observations
+```
+
+---
+
+# 10. Database Schema (Production SQL for PostgreSQL)
+
+Create a production-ready PostgreSQL schema.
+
+Use UUID primary keys.
+
+Enable UUID generation using an appropriate PostgreSQL extension or UUID generation mechanism.
+
+Required tables:
+
+```text
+users
+student_profiles
+subjects
+timetable_entries
+attendance_records
+leave_requests
+leave_attachments
+sync_operations
+notification_preferences
+ai_advisories
+```
+
+---
+
+## `users`
+
+```sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+---
+
+## `student_profiles`
+
+```sql
+CREATE TABLE student_profiles (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    full_name TEXT NOT NULL,
+    institution TEXT,
+    academic_year TEXT,
+    semester TEXT,
+    program TEXT,
+    attendance_target NUMERIC(5,2) NOT NULL DEFAULT 75.00,
+    timezone TEXT NOT NULL DEFAULT 'Asia/Kolkata',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT attendance_target_range
+        CHECK (attendance_target >= 0 AND attendance_target <= 100)
+);
+```
+
+---
+
+## `subjects`
+
+```sql
+CREATE TABLE subjects (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    code TEXT,
+    faculty_name TEXT,
+    credits NUMERIC(4,2) NOT NULL DEFAULT 1,
+    subject_type TEXT NOT NULL DEFAULT 'Theory',
+    target_attendance NUMERIC(5,2),
+    is_archived BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT subject_type_valid
+        CHECK (
+            subject_type IN (
+                'Theory',
+                'Practical',
+                'Lab',
+                'Elective',
+                'Seminar',
+                'Project',
+                'Other'
+            )
+        ),
+    CONSTRAINT subject_credits_valid
+        CHECK (credits >= 0),
+    CONSTRAINT subject_target_valid
+        CHECK (
+            target_attendance IS NULL
+            OR (
+                target_attendance >= 0
+                AND target_attendance <= 100
+            )
+        )
+);
+```
+
+---
+
+## `timetable_entries`
+
+```sql
+CREATE TABLE timetable_entries (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    day_of_week INTEGER NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    room TEXT,
+    faculty_name TEXT,
+    slot_number INTEGER,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT timetable_day_valid
+        CHECK (day_of_week BETWEEN 0 AND 6),
+    CONSTRAINT timetable_time_valid
+        CHECK (end_time > start_time)
+);
+```
+
+---
+
+## `attendance_records`
+
+```sql
+CREATE TABLE attendance_records (
+    id UUID PRIMARY KEY,
+    client_id UUID,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    timetable_entry_id UUID REFERENCES timetable_entries(id) ON DELETE SET NULL,
+    attendance_date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    status TEXT NOT NULL,
+    notes TEXT,
+    source TEXT NOT NULL DEFAULT 'online',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT attendance_status_valid
+        CHECK (
+            status IN (
+                'Present',
+                'Absent',
+                'Cancelled',
+                'Duty Leave',
+                'Medical Leave'
+            )
+        ),
+    CONSTRAINT attendance_source_valid
+        CHECK (
+            source IN (
+                'online',
+                'offline_sync',
+                'import'
+            )
+        ),
+    UNIQUE(user_id, subject_id, attendance_date, start_time)
+);
+```
+
+The `client_id` must be unique per user to support idempotent offline synchronization.
+
+Create an appropriate unique index:
+
+```sql
+CREATE UNIQUE INDEX attendance_client_id_unique
+ON attendance_records(user_id, client_id)
+WHERE client_id IS NOT NULL;
+```
+
+---
+
+## `leave_requests`
+
+```sql
+CREATE TABLE leave_requests (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    leave_type TEXT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reason TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'Pending',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT leave_type_valid
+        CHECK (leave_type IN ('Medical', 'Duty Leave')),
+    CONSTRAINT leave_status_valid
+        CHECK (status IN ('Pending', 'Approved', 'Rejected')),
+    CONSTRAINT leave_date_valid
+        CHECK (end_date >= start_date)
+);
+```
+
+---
+
+## `leave_attachments`
+
+```sql
+CREATE TABLE leave_attachments (
+    id UUID PRIMARY KEY,
+    leave_request_id UUID NOT NULL REFERENCES leave_requests(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    original_filename TEXT NOT NULL,
+    storage_key TEXT NOT NULL,
+    mime_type TEXT NOT NULL,
+    file_size_bytes BIGINT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+---
+
+## `sync_operations`
+
+```sql
+CREATE TABLE sync_operations (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    client_operation_id UUID NOT NULL,
+    operation_type TEXT NOT NULL,
+    entity_type TEXT NOT NULL,
+    entity_id UUID,
+    payload JSONB NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    error_message TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    processed_at TIMESTAMPTZ,
+    UNIQUE(user_id, client_operation_id)
+);
+```
+
+---
+
+## `notification_preferences`
+
+```sql
+CREATE TABLE notification_preferences (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    reminder_minutes_after_class INTEGER NOT NULL DEFAULT 5,
+    quiet_hours_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    quiet_start TIME,
+    quiet_end TIME,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+---
+
+## `ai_advisories`
+
+```sql
+CREATE TABLE ai_advisories (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    advisory_type TEXT NOT NULL,
+    input_snapshot JSONB NOT NULL,
+    response JSONB NOT NULL,
+    model TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+---
+
+## Required Indexes
+
+Create indexes for:
+
+```text
+users.email
+subjects.user_id
+timetable_entries.user_id
+timetable_entries.subject_id
+attendance_records.user_id
+attendance_records.subject_id
+attendance_records.attendance_date
+leave_requests.user_id
+leave_requests.status
+sync_operations.user_id
+sync_operations.status
+ai_advisories.user_id
+```
+
+---
+
+# 11. Row Level Security (RLS) / Data Isolation Rules
+
+Every user's data must be isolated.
+
+A user must never be able to retrieve another user's:
+
+* Subjects
+* Attendance
+* Timetable
+* Leave requests
+* Documents
+* AI advisories
+* Sync operations
+* Profile data
+
+Implement ownership validation at the backend.
+
+If the PostgreSQL environment supports application-level RLS safely, enable RLS policies.
+
+At minimum, every query must include authenticated ownership constraints.
+
+Never trust:
+
+```text
+user_id
+```
+
+provided by the frontend.
+
+The backend must derive the authenticated user identity from the authenticated session/token.
+
+Example:
+
+```text
+WHERE user_id = authenticatedUser.id
+```
+
+Never accept arbitrary ownership identifiers from client payloads.
+
+For nested resources, verify ownership through the parent entity.
+
+---
+
+# 12. Backend API Routes
+
+Implement RESTful APIs.
+
+## Authentication
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+POST /api/auth/forgot-password
+```
+
+---
+
+## Profile
+
+```text
+GET   /api/profile
+PATCH /api/profile
+```
+
+---
+
+## Subjects
+
+```text
+GET    /api/subjects
+POST   /api/subjects
+GET    /api/subjects/:id
+PATCH  /api/subjects/:id
+DELETE /api/subjects/:id
+```
+
+Use archive behavior where appropriate instead of destructive deletion.
+
+---
+
+## Timetable
+
+```text
+GET    /api/timetable
+POST   /api/timetable
+PATCH  /api/timetable/:id
+DELETE /api/timetable/:id
+```
+
+---
+
+## Attendance
+
+```text
+GET    /api/attendance
+POST   /api/attendance
+PATCH  /api/attendance/:id
+DELETE /api/attendance/:id
+```
+
+---
+
+## Attendance Summary
+
+```text
+GET /api/attendance/summary
+GET /api/attendance/subjects/:subjectId/summary
+GET /api/attendance/trends
+```
+
+---
+
+## Calculations
+
+```text
+GET /api/attendance/subjects/:subjectId/forecast
+POST /api/attendance/what-if
+```
+
+The calculation engine must be deterministic.
+
+---
+
+## Leaves
+
+```text
+GET    /api/leaves
+POST   /api/leaves
+GET    /api/leaves/:id
+PATCH  /api/leaves/:id
+DELETE /api/leaves/:id
+POST   /api/leaves/:id/attachments
+```
+
+---
+
+## Sync
+
+```text
+POST /api/sync
+GET  /api/sync/status
+```
+
+The synchronization endpoint must be idempotent.
+
+---
+
+## AI Advisor
+
+```text
+POST /api/advisor
+GET  /api/advisor/history
+```
+
+The backend should generate the advisory context from authoritative database data.
+
+---
+
+## Notifications
+
+```text
+GET   /api/notifications/preferences
+PATCH /api/notifications/preferences
+```
+
+---
+
+# 13. Gemini SDK Setup & Server-Side Security
+
+Use the official package:
+
+```text
+@google/genai
+```
+
+Initialize Gemini exclusively on the backend.
+
+Use an environment variable:
+
+```text
+GEMINI_API_KEY
+```
+
+Never put this key into:
+
+```text
+React code
+VITE_*
+NEXT_PUBLIC_*
+client bundles
+HTML
+localStorage
+IndexedDB
+```
+
+The frontend must call:
+
+```text
+POST /api/advisor
+```
+
+rather than Gemini directly.
+
+---
+
+## Gemini Client
+
+Create a dedicated service:
+
+```text
+server/services/gemini.ts
+```
+
+Initialize the Gemini client using the environment variable.
+
+Use a current supported Gemini model configured through:
+
+```text
+GEMINI_MODEL
+```
+
+Do not hard-code secrets.
+
+---
+
+## AI Failure Handling
+
+If Gemini fails:
+
+* Do not crash the dashboard.
+* Return a safe structured error.
+* Display deterministic attendance information.
+* Allow retry.
+* Log server-side diagnostic information without leaking secrets.
+
+Never expose:
+
+* API keys
+* Internal stack traces
+* Database credentials
+* Raw provider errors
+
+to the browser.
+
+---
+
+# 14. AI System Prompt
+
+Use the following system behavior for the attendance advisor:
+
+```text
+You are AttendSmart's Academic Attendance Advisor.
+
+Your role is to help students understand their attendance situation and make responsible attendance-planning decisions.
+
+You must only use the structured attendance information provided to you.
+
+Never invent:
+- attendance percentages
+- class counts
+- subjects
+- credits
+- dates
+- leave approvals
+- timetable entries
+- institutional rules
+
+The application's deterministic calculation engine is authoritative for mathematical values.
+
+Do not independently override or contradict supplied calculations.
+
+Your responsibilities are:
+1. Explain the student's current attendance situation.
+2. Identify high-risk subjects.
+3. Explain why subjects are risky.
+4. Prioritize subjects based on attendance risk and academic impact.
+5. Explain safe-bunk and recovery information supplied by the backend.
+6. Suggest practical attendance strategies.
+7. Highlight subjects requiring immediate attention.
+8. Provide a concise weekly plan.
+9. Explain trends in understandable language.
+10. Avoid alarmist or judgmental language.
+
+Never claim that an absence is officially excused unless the supplied data says the relevant leave is approved.
+
+Never provide fabricated institutional policies.
+
+If information is missing, explicitly state that the information is unavailable.
+
+Return only valid JSON matching the requested schema.
+
+Do not include Markdown outside JSON fields.
+```
+
+---
+
+# 15. Detailed AI Prompts (with required JSON Schemas)
+
+## 15.1 Attendance Summary Prompt
+
+Provide Gemini with validated data:
+
+```json
+{
+  "overall": {
+    "attended": 0,
+    "conducted": 0,
+    "percentage": 0,
+    "target": 75
+  },
+  "subjects": [],
+  "recentTrend": [],
+  "upcomingClasses": []
+}
+```
+
+Expected response:
+
+```json
+{
+  "summary": "string",
+  "riskLevel": "Critical | Warning | Safe",
+  "keyObservations": [
+    "string"
+  ],
+  "recommendedActions": [
+    "string"
+  ]
+}
+```
+
+---
+
+## 15.2 Subject Prioritization Prompt
+
+Expected response:
+
+```json
+{
+  "priorities": [
+    {
+      "subjectId": "string",
+      "priority": "High | Medium | Low",
+      "reason": "string",
+      "recommendedAction": "string"
+    }
+  ]
+}
+```
+
+The model must only reference supplied subject IDs.
+
+---
+
+## 15.3 Weekly Plan Prompt
+
+Expected response:
+
+```json
+{
+  "weeklyPlan": [
+    {
+      "day": "string",
+      "focus": "string",
+      "actions": [
+        "string"
+      ]
+    }
+  ],
+  "mainGoal": "string",
+  "warning": "string"
+}
+```
+
+---
+
+## 15.4 What-If Explanation Prompt
+
+The backend must calculate the scenario.
+
+Example input:
+
+```json
+{
+  "subjectId": "uuid",
+  "currentAttended": 40,
+  "currentConducted": 50,
+  "target": 75,
+  "scenario": {
+    "futurePresent": 5,
+    "futureAbsent": 2
+  },
+  "calculatedResult": {
+    "newAttended": 45,
+    "newConducted": 57,
+    "newPercentage": 78.95
+  }
+}
+```
+
+Gemini must explain the result rather than recalculate it.
+
+Expected response:
+
+```json
+{
+  "explanation": "string",
+  "impact": "Positive | Neutral | Negative",
+  "recommendation": "string"
+}
+```
+
+---
+
+## 15.5 JSON Rules
+
+Gemini output must be parsed as JSON.
+
+Validate all responses using Zod.
+
+If invalid:
+
+1. Attempt one safe repair/retry.
+2. Validate again.
+3. If still invalid, return deterministic fallback content.
+
+Never blindly parse unvalidated AI output.
+
+---
+
+# 16. Zod Validation Requirements
+
+Create shared validation schemas.
+
+Required schemas:
+
+```text
+registerSchema
+loginSchema
+profileSchema
+subjectSchema
+timetableSchema
+attendanceSchema
+leaveSchema
+attachmentMetadataSchema
+syncOperationSchema
+whatIfSchema
+advisorRequestSchema
+advisorResponseSchema
+notificationPreferencesSchema
+```
+
+Examples:
+
+```ts
+const attendanceSchema = z.object({
+  subjectId: z.string().uuid(),
+  attendanceDate: z.string(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(),
+  status: z.enum([
+    "Present",
+    "Absent",
+    "Cancelled",
+    "Duty Leave",
+    "Medical Leave"
+  ]),
+  notes: z.string().max(1000).optional(),
+});
+```
+
+Validate:
+
+* Body
+* Params
+* Query parameters
+* File metadata
+* Database-facing inputs
+* Sync operations
+* AI responses
+
+Never trust client-provided types.
+
+---
+
+# 17. Frontend Components List
+
+Build reusable components.
+
+## Layout
+
+```text
+AppLayout
+Sidebar
+MobileNavigation
+TopBar
+PageHeader
+Breadcrumbs
+```
+
+---
+
+## Dashboard
+
+```text
+AttendanceOverviewCard
+OverallAttendanceCard
+RiskBadge
+SubjectAttendanceCard
+SafeBunkCard
+RecoveryCard
+TodaySchedule
+UpcomingClassCard
+RecentActivity
+AdvisorInsightCard
+```
+
+---
+
+## Attendance
+
+```text
+AttendanceLogger
+AttendanceStatusButton
+AttendanceHistory
+AttendanceTable
+AttendanceCalendar
+AttendanceEditDialog
+OfflineSyncIndicator
+```
+
+---
+
+## Subjects
+
+```text
+SubjectList
+SubjectCard
+SubjectForm
+SubjectDetails
+SubjectStatistics
+```
+
+---
+
+## Timetable
+
+```text
+WeeklyTimetable
+DailySchedule
+TimetableEntryForm
+CurrentClassIndicator
+UpcomingClassIndicator
+```
+
+---
+
+## Leave Management
+
+```text
+LeaveList
+LeaveForm
+LeaveDetails
+LeaveStatusBadge
+DocumentUploader
+DocumentPreview
+```
+
+---
+
+## Analytics
+
+```text
+AttendanceTrendChart
+SubjectComparisonChart
+CreditDistribution
+RiskDistribution
+MonthlyAttendanceChart
+```
+
+---
+
+## AI
+
+```text
+AdvisorPanel
+PrioritySubjectList
+WeeklyPlan
+WhatIfCalculator
+AIInsightCard
+```
+
+---
+
+## Shared UI
+
+```text
+Button
+Input
+Select
+Textarea
+Dialog
+Modal
+Card
+Badge
+Toast
+Tooltip
+Dropdown
+Tabs
+Skeleton
+EmptyState
+ErrorState
+LoadingState
+ConfirmDialog
+```
+
+---
+
+# 18. Security Requirements
+
+Implement production security.
+
+## Authentication Security
+
+Use:
+
+* Strong password hashing
+* Secure sessions or properly signed tokens
+* Secure cookies where applicable
+* HttpOnly cookies
+* SameSite protection
+* Secure flag in production
+* Session expiration
+* Logout invalidation
+
+Never store raw passwords.
+
+---
+
+## Authorization
+
+Every protected API route must authenticate the request.
+
+Every resource access must verify ownership.
+
+Prevent:
+
+```text
+IDOR
+horizontal privilege escalation
+vertical privilege escalation
+```
+
+---
+
+## Input Security
+
+Validate every request with Zod.
+
+Protect against:
+
+* SQL injection
+* XSS
+* CSRF
+* malicious file uploads
+* oversized requests
+* malformed JSON
+* parameter pollution
+
+Use parameterized SQL queries or a safe database abstraction.
+
+---
+
+## Rate Limiting
+
+Apply rate limiting to:
+
+```text
+/login
+/register
+/forgot-password
+/api/advisor
+```
+
+AI endpoints should have stricter limits to prevent API abuse and excessive Gemini costs.
+
+---
+
+## File Security
+
+For uploads:
+
+* Validate MIME type
+* Validate extension
+* Validate file size
+* Generate safe storage names
+* Do not trust user-provided filenames
+* Store outside publicly served directories
+* Require authorization to download
+* Prevent path traversal
+
+---
+
+## AI Security
+
+Never send unnecessary personal information to Gemini.
+
+Do not send:
+
+* Passwords
+* Authentication tokens
+* Private document contents
+* Secrets
+* Database credentials
+
+Only send the minimum attendance context required.
+
+---
+
+# 19. Environment Variables Template
+
+Create `.env.example`.
+
+```env
+NODE_ENV=development
+
+PORT=5000
+
+DATABASE_URL=
+
+SESSION_SECRET=
+
+GEMINI_API_KEY=
+GEMINI_MODEL=
+
+APP_URL=http://localhost:5173
+
+MAX_UPLOAD_SIZE_MB=10
+```
+
+If the deployment environment requires additional variables, document them in the README and `.env.example`.
+
+Never commit:
+
+```text
+.env
+```
+
+to Git.
+
+---
+
+# 20. Suggested Folder Structure
+
+Use a clean monorepo-style structure:
+
+```text
+attendsmart/
+│
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   ├── dashboard/
+│   │   │   ├── attendance/
+│   │   │   ├── subjects/
+│   │   │   ├── timetable/
+│   │   │   ├── leaves/
+│   │   │   ├── analytics/
+│   │   │   └── advisor/
+│   │   │
+│   │   ├── pages/
+│   │   ├── layouts/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── lib/
+│   │   ├── store/
+│   │   ├── offline/
+│   │   ├── types/
+│   │   ├── utils/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   │
+│   └── index.html
+│
+├── server/
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   │   ├── gemini.ts
+│   │   ├── attendance.ts
+│   │   ├── calculations.ts
+│   │   ├── sync.ts
+│   │   └── notifications.ts
+│   │
+│   ├── middleware/
+│   │   ├── auth.ts
+│   │   ├── validation.ts
+│   │   ├── rateLimit.ts
+│   │   └── errorHandler.ts
+│   │
+│   ├── db/
+│   │   ├── connection.ts
+│   │   ├── migrations/
+│   │   └── queries/
+│   │
+│   ├── schemas/
+│   ├── utils/
+│   └── index.ts
+│
+├── shared/
+│   ├── schemas/
+│   ├── types/
+│   └── constants/
+│
+├── public/
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+│
+├── .env.example
+├── .gitignore
+├── package.json
+├── README.md
+└── tsconfig.json
+```
+
+---
+
+# 21. Implementation Phases
+
+Implement the application in the following order.
+
+## Phase 1 — Project Initialization
+
+Create:
+
+* React frontend
+* Node/Express backend
+* TypeScript configuration
+* Tailwind CSS
+* PostgreSQL connection
+* Environment configuration
+* Shared types
+* Zod infrastructure
+
+Verify the application starts successfully.
+
+---
+
+## Phase 2 — Database
+
+Implement:
+
+* PostgreSQL schema
+* Tables
+* Constraints
+* Indexes
+* Migrations
+* Ownership enforcement
+
+Seed only development-safe demo data if necessary.
+
+Never seed fake data into production.
+
+---
+
+## Phase 3 — Authentication
+
+Implement:
+
+* Registration
+* Login
+* Logout
+* Session handling
+* Protected routes
+* Profile creation
+
+Test unauthorized access.
+
+---
+
+## Phase 4 — Subject Management
+
+Implement complete CRUD/archive functionality.
+
+Add:
+
+* Credits
+* Subject type
+* Target percentage
+
+---
+
+## Phase 5 — Timetable
+
+Implement:
+
+* Weekly timetable
+* Daily schedule
+* Current class detection
+* Upcoming classes
+* Timetable CRUD
+
+---
+
+## Phase 6 — Attendance Engine
+
+Implement:
+
+* Attendance CRUD
+* Percentage calculation
+* Risk classification
+* Safe bunk calculation
+* Required attendance calculation
+
+Write unit tests for every mathematical edge case.
+
+---
+
+## Phase 7 — Dashboard
+
+Implement:
+
+* Overall statistics
+* Subject cards
+* Risk indicators
+* Bunk/recovery information
+* Today's schedule
+* Recent activity
+
+---
+
+## Phase 8 — Leave Management
+
+Implement:
+
+* Medical leave
+* OD
+* Approval states
+* Supporting documents
+* Attendance integration
+
+---
+
+## Phase 9 — Offline Architecture
+
+Implement:
+
+* IndexedDB/local persistence
+* Offline attendance queue
+* UUID client IDs
+* Synchronization
+* Retry logic
+* Conflict handling
+* Sync status UI
+
+Test by disabling network connectivity.
+
+---
+
+## Phase 10 — Analytics
+
+Implement:
+
+* Trends
+* Subject comparisons
+* Credit-weighted analytics
+* Risk distribution
+* Historical summaries
+
+---
+
+## Phase 11 — Notifications
+
+Implement:
+
+* Reminder preferences
+* Local/browser notifications
+* Post-class reminders
+* Quiet hours
+
+---
+
+## Phase 12 — Gemini AI
+
+Implement:
+
+* Gemini server integration
+* Advisor context generation
+* Structured prompts
+* JSON response validation
+* Fallback behavior
+* AI history
+
+---
+
+## Phase 13 — Security Hardening
+
+Perform a security review for:
+
+* Authentication
+* Authorization
+* SQL injection
+* XSS
+* CSRF
+* File uploads
+* Rate limiting
+* Secrets
+* API abuse
+* IDOR
+* Data isolation
+
+---
+
+## Phase 14 — Testing
+
+Implement:
+
+### Unit Tests
+
+Test:
+
+* Percentage calculation
+* Safe bunks
+* Required attendance
+* Risk classification
+* Credit weighting
+* Date handling
+* Sync deduplication
+
+### Integration Tests
+
+Test:
+
+* Authentication
+* Subject CRUD
+* Attendance CRUD
+* Leave APIs
+* Sync API
+* Advisor API
+
+### End-to-End Tests
+
+Test:
+
+```text
+Register
+→ Create subjects
+→ Create timetable
+→ Mark attendance
+→ View dashboard
+→ Go offline
+→ Mark attendance
+→ Reconnect
+→ Synchronize
+→ View updated statistics
+→ Open AI advisor
+```
+
+---
+
+## Phase 15 — Production Polish
+
+Implement:
+
+* Loading states
+* Empty states
+* Error states
+* Responsive layout
+* Accessibility
+* Toast notifications
+* Confirmation dialogs
+* Skeleton loaders
+* Mobile navigation
+* Offline indicators
+
+Remove:
+
+* console debugging
+* TODO placeholders
+* fake API data
+* unused imports
+* dead code
+* exposed secrets
+
+---
+
+# 22. Acceptance Criteria
+
+The implementation is complete only when all of the following are true.
+
+## Functional
+
+* [ ] Users can register.
+* [ ] Users can log in.
+* [ ] Users can log out.
+* [ ] Users can manage their profile.
+* [ ] Users can create subjects.
+* [ ] Users can edit/archive subjects.
+* [ ] Users can define credits.
+* [ ] Users can define attendance targets.
+* [ ] Users can create timetable entries.
+* [ ] Users can mark attendance.
+* [ ] Users can modify attendance.
+* [ ] Cancelled classes are excluded from conducted counts.
+* [ ] Approved OD/medical leave is handled according to the configured policy.
+* [ ] Attendance percentage updates immediately.
+* [ ] Safe bunks are calculated correctly.
+* [ ] Required attendance is calculated correctly.
+* [ ] Risk status is calculated correctly.
+* [ ] Dashboard updates after attendance changes.
+* [ ] Historical attendance is available.
+* [ ] Analytics work.
+* [ ] Leave management works.
+* [ ] Documents are securely handled.
+* [ ] Offline attendance works.
+* [ ] Synchronization works.
+* [ ] Duplicate synchronization does not create duplicate attendance.
+* [ ] Reminder settings work.
+* [ ] Gemini advisor works.
+* [ ] AI responses are validated.
+* [ ] AI failures do not break the application.
+
+---
+
+## Mathematical
+
+Verify:
+
+```text
+Percentage = (Attended / Conducted) × 100
+```
+
+Verify:
+
+```text
+Safe Bunks =
+floor((Attended - Target × Conducted) / Target)
+```
+
+Verify:
+
+```text
+Required =
+ceil((Target × Conducted - Attended) / (1 - Target))
+```
+
+Handle:
+
+```text
+0 conducted classes
+0 attended classes
+100% attendance
+target already achieved
+very low attendance
+target = 0
+target = 100
+```
+
+Avoid division-by-zero and invalid negative outputs.
+
+For `Target = 100%`, recovery mathematics must be handled as a special case because the standard denominator `(1 - T)` becomes zero.
+
+For example:
+
+```text
+If A = C:
+    Required = 0
+Else:
+    Target cannot be recovered by finite future attendance alone.
+```
+
+Represent this state explicitly rather than returning infinity or crashing.
+
+---
+
+## Security
+
+* [ ] Passwords are hashed.
+* [ ] Authentication is enforced.
+* [ ] Authorization is enforced.
+* [ ] Users cannot access another user's data.
+* [ ] API keys are server-side only.
+* [ ] SQL queries are parameterized.
+* [ ] Inputs are validated.
+* [ ] File uploads are restricted.
+* [ ] Rate limiting exists.
+* [ ] Sensitive errors are hidden.
+* [ ] Private documents are protected.
+
+---
+
+## Offline
+
+* [ ] Attendance can be marked offline.
+* [ ] Offline data persists across page refresh.
+* [ ] Sync queue persists.
+* [ ] Sync automatically retries.
+* [ ] Duplicate operations are prevented.
+* [ ] Sync failures are visible.
+* [ ] Successful operations are removed/marked synchronized.
+
+---
+
+## UX
+
+* [ ] Fully responsive.
+* [ ] Mobile-friendly.
+* [ ] Desktop-friendly.
+* [ ] Keyboard accessible.
+* [ ] Clear status indicators.
+* [ ] No confusing empty screens.
+* [ ] Loading states exist.
+* [ ] Errors are understandable.
+* [ ] Forms are validated.
+* [ ] Navigation is intuitive.
+
+---
+
+## AI
+
+* [ ] Gemini is called only from the backend.
+* [ ] AI receives validated attendance data.
+* [ ] AI cannot modify database records.
+* [ ] AI cannot invent attendance numbers.
+* [ ] AI JSON is validated with Zod.
+* [ ] AI failures have fallbacks.
+* [ ] AI requests are rate limited.
+* [ ] Sensitive information is not unnecessarily sent to Gemini.
+
+---
+
+# 23. Final Instruction to Coding Agent
+
+You are now responsible for implementing the complete **AttendSmart** application described in this specification.
+
+Do not merely generate a prototype.
+
+Do not create only the frontend.
+
+Do not create only the backend.
+
+Do not stop after scaffolding.
+
+Do not leave placeholders such as:
+
+```text
+TODO
+FIXME
+implement later
+coming soon
+mock data
+fake API
+replace this
+```
+
+Every mandatory feature must be implemented.
+
+If an external service requires credentials, implement the complete integration and document the required environment variable in `.env.example`, but never hard-code credentials.
+
+If a service cannot be used during development, implement a clean abstraction and deterministic fallback without compromising the production architecture.
+
+The final application must:
+
+1. Start successfully.
+2. Build successfully.
+3. Connect to PostgreSQL.
+4. Authenticate users securely.
+5. Persist all user data.
+6. Calculate attendance accurately.
+7. Provide dynamic bunk/recovery forecasting.
+8. Manage timetables.
+9. Manage OD and medical leave.
+10. Support secure attachments.
+11. Work offline for attendance logging.
+12. Synchronize automatically.
+13. Provide analytics.
+14. Provide reminders.
+15. Integrate Gemini securely.
+16. Validate AI output.
+17. Protect user data.
+18. Be responsive.
+19. Be accessible.
+20. Include tests.
+21. Include database migrations.
+22. Include `.env.example`.
+23. Include a complete README.
+24. Include setup instructions.
+25. Include deployment instructions.
+
+Before declaring the project complete, perform a final engineering audit.
+
+Check every requirement in this prompt against the actual implementation.
+
+Fix all compilation errors.
+
+Fix all TypeScript errors.
+
+Fix all database errors.
+
+Fix all API errors.
+
+Fix all routing errors.
+
+Fix all responsive-layout issues discovered during testing.
+
+Fix all authentication/authorization problems.
+
+Fix all calculation edge cases.
+
+Fix offline synchronization issues.
+
+Fix AI validation issues.
+
+Then run the application and verify the primary user journey end-to-end:
+
+```text
+Register
+→ Login
+→ Create Profile
+→ Set Attendance Target
+→ Create Subjects
+→ Add Credits
+→ Create Timetable
+→ Mark Attendance
+→ View Dashboard
+→ Calculate Safe Bunks
+→ Calculate Required Attendance
+→ Add Leave
+→ View Analytics
+→ Disable Network
+→ Mark Attendance Offline
+→ Restore Network
+→ Synchronize
+→ Open AI Advisor
+→ Receive Validated Advisory
+```
+
+The final deliverable must be a **complete, coherent, production-grade AttendSmart application**, not a collection of disconnected examples.
+
+Use sensible engineering judgment wherever implementation details are not explicitly specified, while preserving every mandatory requirement in this prompt.
+
+This prompt is ready to paste into **Cursor, Claude Code, Replit Agent, Bolt, or a similar coding agent**.
